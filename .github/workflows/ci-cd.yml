@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: CI
     runs-on: ubuntu-latest
 
     steps:
@@ -34,3 +34,10 @@ jobs:
 
       - name: Build
         run: npm run build:frontend && npm run build:backend
+
+      - name: Deploy to Vercel
+        working-directory: frontend
+        run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

@@ -136,8 +136,9 @@ and confirming the displayed progress summary matches the expected proportion of
 ### Edge Cases
 
 - What happens when a user tries to create a project with a name identical to an existing
-  project's name? The system MUST allow it (projects are not required to have unique names) but
-  each project remains a distinct entity with its own tasks.
+  project's name? **Superseded by `specs/002-project-management/spec.md`**: project names are
+  now required to be unique (case-insensitive, after trimming) — see that spec's FR-005. This
+  feature's original rule (duplicate names allowed) no longer applies.
 - What happens when a task is created before any team members exist? The system MUST allow the
   task to be created unassigned, and assignment can happen later.
 - What happens when a user attempts to assign a task to a team member and no team members exist
@@ -234,3 +235,7 @@ and confirming the displayed progress summary matches the expected proportion of
   data isolation between users, consistent with the demonstration purpose of the application.
 - Project progress is defined as the count/proportion of a project's tasks currently in "Done"
   status; no other progress metric (e.g., time-based, effort-based) is in scope.
+- Project name format and uniqueness rules are governed by `specs/002-project-management/spec.md`
+  as of that feature's introduction; this spec's FR-001–FR-003 (create/list a project) still
+  apply, but the specific validation rules for the `name` field itself should be read from 002,
+  not assumed from this document.

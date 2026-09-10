@@ -19,13 +19,4 @@ describe("GET /api/projects", () => {
     expect(res.body).toHaveLength(2);
     expect(res.body.map((p: { name: string }) => p.name).sort()).toEqual(["Alpha", "Beta"]);
   });
-
-  it("allows two projects with the same name", async () => {
-    await request(app).post("/api/projects").send({ name: "Duplicate" });
-    await request(app).post("/api/projects").send({ name: "Duplicate" });
-
-    const res = await request(app).get("/api/projects");
-    expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(2);
-  });
 });

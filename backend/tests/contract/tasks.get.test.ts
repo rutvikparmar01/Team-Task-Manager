@@ -11,8 +11,8 @@ afterAll(async () => {
 
 describe("GET /api/projects/:projectId/tasks", () => {
   it("returns only tasks belonging to that project", async () => {
-    const p1 = (await request(app).post("/api/projects").send({ name: "P1" })).body._id;
-    const p2 = (await request(app).post("/api/projects").send({ name: "P2" })).body._id;
+    const p1 = (await request(app).post("/api/projects").send({ name: "Project One" })).body._id;
+    const p2 = (await request(app).post("/api/projects").send({ name: "Project Two" })).body._id;
     await request(app).post(`/api/projects/${p1}/tasks`).send({ title: "P1 task" });
     await request(app).post(`/api/projects/${p2}/tasks`).send({ title: "P2 task" });
 

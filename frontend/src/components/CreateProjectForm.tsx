@@ -3,21 +3,28 @@ import { useState, type FormEvent } from "react";
 export function CreateProjectForm({
   onCreate,
   isSubmitting,
+  serverError,
 }: {
   onCreate: (input: { name: string; description?: string }) => void;
   isSubmitting?: boolean;
+  /** Message from a rejected create-project request (e.g. too short/long, duplicate name). */
+  serverError?: string | null;
 }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [clientError, setClientError] = useState<string | null>(null);
+
+  // A new submission attempt should replace whatever error is currently showing, whether it
+  // came from this client-side check or the previous submission's server rejection.
+  const error = clientError ?? serverError ?? null;
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) {
-      setError("Project name is required.");
+      setClientError("Project name is required.");
       return;
     }
-    setError(null);
+    setClientError(null);
     onCreate({ name: name.trim(), description: description.trim() || undefined });
     setName("");
     setDescription("");

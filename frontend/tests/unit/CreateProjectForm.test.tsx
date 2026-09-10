@@ -23,4 +23,30 @@ describe("CreateProjectForm", () => {
 
     expect(onCreate).toHaveBeenCalledWith({ name: "Demo Project", description: undefined });
   });
+
+  it("shows a server-rejected error message (e.g. too-short or duplicate name)", () => {
+    render(<CreateProjectForm onCreate={vi.fn()} serverError='Project name must be at least 3 characters.' />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(/at least 3 characters/i);
+  });
+
+  it("shows a server-rejected duplicate-name error through the same alert", () => {
+    render(
+      <CreateProjectForm onCreate={vi.fn()} serverError='A project named "Marketing Site" already exists.' />,
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent(/already exists/i);
+  });
+
+  it("prefers the client-side blank-name check over a stale server error", async () => {
+    const onCreate = vi.fn();
+    render(
+      <CreateProjectForm onCreate={onCreate} serverError="A project named &quot;X&quot; already exists." />,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: /create project/i }));
+
+    expect(screen.getByRole("alert")).toHaveTextContent(/project name is required/i);
+    expect(onCreate).not.toHaveBeenCalled();
+  });
 });

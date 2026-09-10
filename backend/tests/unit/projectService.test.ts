@@ -47,4 +47,15 @@ describe("projectService", () => {
     const progress = await projectService.getProjectProgress(projectId);
     expect(progress).toEqual({ totalTasks: 1, doneTasks: 1, progress: 1 });
   });
+
+  it("rejects a case/whitespace-variant duplicate name, independent of HTTP", async () => {
+    await projectService.createProject({ name: "Marketing Site" });
+
+    await expect(
+      projectService.createProject({ name: "  marketing site  " }),
+    ).rejects.toThrow(/already exists/i);
+
+    const projects = await projectService.listProjects();
+    expect(projects).toHaveLength(1);
+  });
 });

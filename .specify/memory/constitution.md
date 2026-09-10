@@ -1,24 +1,25 @@
 <!--
 Sync Impact Report
-Version change: 1.0.0 → 2.0.0
-Rationale for MAJOR bump: The full principle set is replaced with a new, differently-scoped
-set of 10 principles supplied directly by the project owner. This is a backward-incompatible
-redefinition, not an addition — prior principles no longer stand as written.
-Modified principles:
-  - I. Test-First Development → VI. Automated Backend Testing (narrowed to backend; no longer
-    mandates red-green-refactor ordering for all changes)
-  - II. Simplicity & Maintainability → IX. Demonstration-Scale Simplicity (re-scoped to an
-    explicit demo-sized ceiling)
-  - III. UX Consistency → VII. Reusable, Accessible Frontend Components (re-scoped to
-    component reusability + accessibility rather than cross-screen interaction consistency)
-Added principles: I. TypeScript Everywhere, II. Specification as Source of Truth,
-  III. Acceptance Criteria for Every Requirement, IV. Input Validation at the API Boundary,
-  V. Business Logic Independent of HTTP Layer, VIII. No Unspecified Functionality,
-  X. Free and Open-Source Tooling Preference
-Added sections: Technology Stack
-Removed sections: Quality Gates (superseded by Development Workflow, which now folds in the
-  review-gate language)
+Version change: 2.0.0 → 2.1.0
+Rationale for MINOR bump: A new stack constraint (deployment target/topology) is added to the
+Technology Stack section. This is an addition, not a redefinition — no existing principle or
+prior statement in the Technology Stack section is changed or removed.
+Modified principles: none
+Added principles: none
+Added sections: none (existing Technology Stack section extended with a Deployment line)
+Removed sections: none
 Follow-up TODOs: none
+
+--- Prior amendment history ---
+1.0.0 → 2.0.0: The full principle set was replaced with a new, differently-scoped set of 10
+principles supplied directly by the project owner. Modified: I. Test-First Development → VI.
+Automated Backend Testing; II. Simplicity & Maintainability → IX. Demonstration-Scale
+Simplicity; III. UX Consistency → VII. Reusable, Accessible Frontend Components. Added: I.
+TypeScript Everywhere, II. Specification as Source of Truth, III. Acceptance Criteria for
+Every Requirement, IV. Input Validation at the API Boundary, V. Business Logic Independent of
+HTTP Layer, VIII. No Unspecified Functionality, X. Free and Open-Source Tooling Preference.
+Added sections: Technology Stack. Removed sections: Quality Gates (superseded by Development
+Workflow).
 -->
 
 # Task Management Application Constitution
@@ -121,10 +122,12 @@ licensing cost or vendor lock-in for a demonstration application.
 - Frontend: React with TypeScript.
 - Backend: Node.js with TypeScript.
 - Persistence: MongoDB.
+- Deployment: Vercel — frontend as a static build, backend as Vercel Serverless Functions in
+  the same project, routed via `/api/*` rewrites.
 
 Any change to this stack (adding a second datastore, replacing a framework, introducing a
-new runtime) is a constitution amendment, not a routine implementation decision, and MUST
-go through the amendment process below.
+new runtime, or changing the deployment target/topology) is a constitution amendment, not a
+routine implementation decision, and MUST go through the amendment process below.
 
 ## Development Workflow
 
@@ -151,4 +154,4 @@ Versioning policy (semantic versioning for this document):
 - MINOR: A new principle or materially expanded section is added.
 - PATCH: Wording clarifications, typo fixes, or non-semantic refinements.
 
-**Version**: 2.0.0 | **Ratified**: 2026-09-10 | **Last Amended**: 2026-09-10
+**Version**: 2.1.0 | **Ratified**: 2026-09-10 | **Last Amended**: 2026-09-10

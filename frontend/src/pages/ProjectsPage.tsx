@@ -27,6 +27,7 @@ export default function ProjectsPage() {
         <CreateProjectForm
           onCreate={(input) => createProject.mutate(input)}
           isSubmitting={createProject.isPending}
+          serverError={createProject.error?.message}
         />
       </section>
     </div>
