@@ -13,9 +13,10 @@
     "build:frontend": "npm run build --workspace=frontend",
     "test:backend": "npm test --workspace=backend",
     "test:frontend": "npm test --workspace=frontend",
-    "type-check": "npm run type-check:frontend && npm run type-check:backend",
+    "type-check": "npm run type-check:frontend && npm run type-check:backend && npm run type-check:api",
     "type-check:frontend": "tsc --noEmit -p frontend/tsconfig.json",
     "type-check:backend": "tsc --noEmit -p backend/tsconfig.json",
+    "type-check:api": "tsc --noEmit -p api/tsconfig.json",
     "test": "npm run test:backend && npm run test:frontend",
     "lint": "eslint ."
   },

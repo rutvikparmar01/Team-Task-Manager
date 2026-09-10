@@ -9,7 +9,11 @@ import { teamMembersRouter } from "./api/teamMembers";
 export function createApp() {
   const app = express();
 
-  app.use(cors());
+  // CORS_ORIGIN restricts allowed origins in production (e.g. the deployed frontend's URL).
+  // Left unset, this remains permissive for local development, where the frontend and backend
+  // run on different ports (5173/3001) and Vite's dev proxy isn't in play for direct API calls.
+  const corsOrigin = process.env.CORS_ORIGIN;
+  app.use(cors(corsOrigin ? { origin: corsOrigin } : undefined));
   app.use(express.json());
 
   app.use("/api/projects", projectsRouter);
