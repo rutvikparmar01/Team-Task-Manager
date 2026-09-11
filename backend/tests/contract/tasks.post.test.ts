@@ -49,4 +49,19 @@ describe("POST /api/projects/:projectId/tasks", () => {
     expect(res.status).toBe(201);
     expect(res.body).toMatchObject({ priority: "High", assigneeId: memberRes.body._id });
   });
+
+  it("records exactly one TaskCreated activity, timestamped at creation", async () => {
+    const projectId = await createProject();
+    const before = new Date();
+    const task = (
+      await request(app).post(`/api/projects/${projectId}/tasks`).send({ title: "Write report" })
+    ).body;
+
+    const activities = (await request(app).get(`/api/tasks/${task._id}/activities`)).body;
+    expect(activities).toHaveLength(1);
+    expect(activities[0].category).toBe("TaskCreated");
+    expect(new Date(activities[0].createdAt).getTime()).toBeGreaterThanOrEqual(
+      before.getTime() - 1000,
+    );
+  });
 });

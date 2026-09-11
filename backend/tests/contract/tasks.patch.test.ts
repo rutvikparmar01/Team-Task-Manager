@@ -78,4 +78,48 @@ describe("PATCH /api/tasks/:taskId", () => {
       .send({ assigneeId: new mongoose.Types.ObjectId().toString() });
     expect(res.status).toBe(404);
   });
+
+  async function activitiesFor(taskId: string) {
+    return (await request(app).get(`/api/tasks/${taskId}/activities`)).body as Array<{
+      category: string;
+    }>;
+  }
+
+  it("records a StatusChanged activity, and none for a no-op status update", async () => {
+    const task = await createTask();
+    await request(app).patch(`/api/tasks/${task._id}`).send({ status: "In Progress" });
+
+    let activities = await activitiesFor(task._id);
+    expect(activities.filter((a) => a.category === "StatusChanged")).toHaveLength(1);
+
+    await request(app).patch(`/api/tasks/${task._id}`).send({ status: "In Progress" });
+    activities = await activitiesFor(task._id);
+    expect(activities.filter((a) => a.category === "StatusChanged")).toHaveLength(1);
+  });
+
+  it("records a PriorityChanged activity, and none for a no-op priority update", async () => {
+    const task = await createTask();
+    await request(app).patch(`/api/tasks/${task._id}`).send({ priority: "High" });
+
+    let activities = await activitiesFor(task._id);
+    expect(activities.filter((a) => a.category === "PriorityChanged")).toHaveLength(1);
+
+    await request(app).patch(`/api/tasks/${task._id}`).send({ priority: "High" });
+    activities = await activitiesFor(task._id);
+    expect(activities.filter((a) => a.category === "PriorityChanged")).toHaveLength(1);
+  });
+
+  it("records an AssigneeChanged activity for assignment, reassignment, and unassignment", async () => {
+    const task = await createTask();
+    const ada = (await request(app).post("/api/team-members").send({ name: "Ada" })).body._id;
+    const grace = (await request(app).post("/api/team-members").send({ name: "Grace" })).body
+      ._id;
+
+    await request(app).patch(`/api/tasks/${task._id}`).send({ assigneeId: ada });
+    await request(app).patch(`/api/tasks/${task._id}`).send({ assigneeId: grace });
+    await request(app).patch(`/api/tasks/${task._id}`).send({ assigneeId: null });
+
+    const activities = await activitiesFor(task._id);
+    expect(activities.filter((a) => a.category === "AssigneeChanged")).toHaveLength(3);
+  });
 });

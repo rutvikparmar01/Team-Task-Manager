@@ -35,3 +35,21 @@ export interface TaskFilter {
   status?: Status;
   priority?: Priority;
 }
+
+export type ActivityCategory =
+  | "TaskCreated"
+  | "AssigneeChanged"
+  | "StatusChanged"
+  | "PriorityChanged";
+
+export interface Activity {
+  _id: string;
+  taskId: string;
+  category: ActivityCategory;
+  fromStatus?: Status;
+  toStatus?: Status;
+  fromPriority?: Priority;
+  toPriority?: Priority;
+  assigneeId?: string | null;
+  createdAt: string;
+}

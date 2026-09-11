@@ -1,6 +1,7 @@
 import express, { type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
 import { ZodError } from "zod";
+import mongoose from "mongoose";
 import { HttpError } from "./errors";
 import { projectsRouter } from "./api/projects";
 import { tasksRouter } from "./api/tasks";
@@ -29,6 +30,10 @@ export function createApp() {
     if (err instanceof ZodError) {
       const message = err.issues[0]?.message ?? "Invalid input.";
       res.status(400).json({ message });
+      return;
+    }
+    if (err instanceof mongoose.Error.CastError) {
+      res.status(400).json({ message: `"${err.value}" is not a valid id.` });
       return;
     }
     if (err instanceof HttpError) {
